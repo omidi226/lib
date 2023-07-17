@@ -16,12 +16,16 @@ predicate is_correct( var Contract:c)=
 %predicate is_Complete( var Contract:c)= 
 %forall ( a in c.assumptions,g in c.guarantees)(  g=true);
 
+%c2 << c1  (29)
 predicate is_refine(var Contract:c2, var Contract:c1)=
 forall(a1 in c1.assumptions) (a1=1) -> forall(a2 in c2.assumptions) (a2=1)  /\
 (forall (a2 in c2.assumptions) (a2=1) -> forall(g2 in c2.guarantees) (g2=1)) -> (forall (a1 in c1.assumptions) (a1=1) -> forall(g1 in c1.guarantees) (g1=1));
+
+%C1/C2 = max{ C | C ⊗ C2 << C1}  
+predicate is_quotient(var Contract:c1, var Contract:c2, var Contract:c)=
+(compose( c3,c,c2)) -> is_refine(c3,c1);
  
 
- 
 
 function var Contract: compose1(var Contract: c1,var Contract: c2) =
 (
@@ -71,7 +75,8 @@ constraint card(c4.guarantees)=1;
 %constraint c3.assumptions = c1.assumptions union c2.assumptions;
 %constraint c3.guarantees = c1.guarantees union c2.guarantees;
 %constraint compose (c3,c1,c2);
-constraint is_refine(c1,c4);
+constraint is_quotient(c3,c1,c2);
+%constraint is_refine(c1,c4);
 y=-1;x=1;z=1;
 
-solve satisfy;
+solve satisfy ;
