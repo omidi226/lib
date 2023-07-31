@@ -26,7 +26,7 @@ forall(i in 0..n) (   exists(j in 0..n ) (   q[i] =1 /\ q[j]=1) );
 
 
 
-% variables
+
 
 
 
