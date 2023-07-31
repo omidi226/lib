@@ -23,7 +23,7 @@ exists(i in 0..n) (  q[i]=1 -> q[i+1]=1);
 
 %U
 predicate U( array[0..n] of var 0..1:q)=
-forall(i in 0..n) (   exists(j in n..n+n ) (   q[i] =1 /\ q[j]=1) );
+forall(i in 0..n) (   exists(j in 0..n ) (   q[i] =1 /\ q[j]=1) );
 
 
 
