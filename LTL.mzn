@@ -2,12 +2,15 @@
 include "globals.mzn";
 
 int:n;
+int:n1;
+int:n2;
 %type trace =  record (array[0..n] of var 0..1:q); % trace=q0,q1,q2,...
+
 array[0..n] of var 0..1:q; % trace=q0,q1,q2,...
 
 %p
 predicate P ( array[0..n] of var 0..1:q)=
-forall(i in 0..n ) (   q[0] =1 );
+ q[0] =1 ;
 
 %G
 predicate G( array[0..n] of var 0..1:q)=
@@ -19,11 +22,11 @@ exists(i in 0..n) (   q[i]=1  );
 
 %X
 predicate X( array[0..n] of var 0..1:q)=
-exists(i in 0..n) (  q[i]=1 -> q[i+1]=1);
+ q[1]=1 ;
 
 %U
-predicate U( array[0..n] of var 0..1:q)=
-forall(i in 0..n) (   exists(j in 0..n ) (   q[i] =1 /\ q[j]=1) );
+predicate U( array[0..n1] of var 0..1:q1,array[n1..n2] of var 0..1:q2)=
+forall(i in 0..n1) (   exists(j in n1..n2 ) (   q2[i] =1 /\ q1[j]=1) );
 
 
 
