@@ -25,7 +25,7 @@ predicate X( array[0..n] of var 0..1:q)=
 
 %U
 predicate U( array[0..n] of var 0..1:q1,array[0..n] of var 0..1:q2)=
-  exists(j in 0..n) (forall(i in j+1..n)((q2[i] =1 /\ q1[j]=1) ));
+  exists(j in 0..n) (forall(i in 0..j-1)((q2[i] =1 /\ q1[j]=1) ));
 
 %GF
 predicate GF( array[0..n] of var 0..1:q)=
