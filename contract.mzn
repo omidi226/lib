@@ -12,21 +12,12 @@ predicate is_compatible(var Contract: c) =
 predicate is_correct( var Contract:c)=
  exists (g in c.guarantees) ( g=true);
 
-%FIXME
-%predicate is_Complete( var Contract:c)= 
-%forall ( a in c.assumptions,g in c.guarantees)(  g=true);
-
 %c2 << c1  (29)
 predicate is_refine(var Contract:c2, var Contract:c1)=
 forall(a1 in c1.assumptions) (a1=1) -> forall(a2 in c2.assumptions) (a2=1)  /\
 (forall (a2 in c2.assumptions) (a2=1) -> forall(g2 in c2.guarantees) (g2=1)) -> (forall (a1 in c1.assumptions) (a1=1) -> forall(g1 in c1.guarantees) (g1=1));
-
-%C1/C2 = max{ C | C ⊗ C2 << C1}  
-%predicate is_quotient(var Contract:c1, var Contract:c2, var Contract:c)=
-%(compose1( c,c2)) -> is_refine(c3,c1);
  
-
-
+ 
 function var Contract: compose1(var Contract: c1,var Contract: c2) :: promise_total=
 (
 assumptions: c1.assumptions union c2.assumptions , guarantees: c1.guarantees union c2.guarantees
@@ -37,9 +28,16 @@ predicate conjunction(var Contract: c3,var Contract: c1,var Contract: c2) =
 (c3.assumptions = c1.assumptions union c2.assumptions) /\( c3.guarantees = c1.guarantees intersect c2.guarantees);
 
 
+%FIXME
+%predicate is_Complete( var Contract:c)= 
+%forall ( a in c.assumptions,g in c.guarantees)(  g=true);
+
+%C1/C2 = max{ C | C ⊗ C2 << C1}  
+%predicate is_quotient(var Contract:c1, var Contract:c2, var Contract:c)=
+%(compose1( c,c2)) -> is_refine(c3,c1);
+
 
 %predicate  compose(var Contract: c3,var Contract: c1,var Contract: c2) =
-
 %(c3.assumptions = c1.assumptions union c2.assumptions) /\( c3.guarantees = c1.guarantees union c2.guarantees);
 
 

@@ -25,7 +25,7 @@ predicate X( array[0..n] of var 0..1:q)=
 
 %U
 predicate U( array[0..n] of var 0..1:q1,array[0..n] of var 0..1:q2)=
-  exists(j in 0..n) (forall(i in 0..j-1)((q2[i] =1 /\ q1[j]=1) ));
+exists(j in 0..n) (forall(i in 0..j-1)((q2[i] =1 /\ q1[j]=1) ));
 
 %GF
 predicate GF( array[0..n] of var 0..1:q)=
@@ -40,6 +40,7 @@ forall(j in 0..n) (exists(i in j+1..n)((q[i] =1 /\ q[j]=1) ));
 
 
 array[0..n] of var 0..1:Q;
+array[0..n] of var 0..1:Q1;
 %constraint (Q[0]=0);
 %constraint P(Q);
 
@@ -52,9 +53,14 @@ array[0..n] of var 0..1:Q;
 %constraint (Q[0]=1 /\ Q[1]=0);
 %constraint X(Q);
 
-%constraint forall(i in 0..n)(Q[i]=1);
-%constraint U(Q);
+%constraint forall(j in 0..n,i in 0..j-1)(Q[j]=1 /\ Q[i]=0);
+%constraint U(Q,Q1);
 
+%constraint forall(j in 0..n,i in j+1..n)(Q[j]=1 /\ Q[i]=1);
+%constraint GF(Q);
+
+%constraint forall(j in 0..n,i in j+1..n)(Q[j]=1 /\ Q[i]=1);
+%constraint FG(Q);
 
 solve satisfy ;
 
