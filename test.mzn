@@ -8,7 +8,7 @@ int:R;
 
 set of int:tasks=1..n;
 array [1..R] of 0..1:performance;
-array [1..n]of 0..1:Ccpu;
+array [1..n]of 0..1:Contract;
 array [1..m,1..2]of tasks: next;
 array [1..n] of var 1..R:map;
 
@@ -24,7 +24,7 @@ constraint forall (i in 1..m)
 constraint cumulative(start,d,r,R);
 constraint diffn(start,r,d,[1 | t in tasks]); 
 
-constraint forall(i in tasks, j in 1..R where Ccpu[i]=1 /\ performance[j]=1)(map[i] = j);                     
+constraint forall(i in tasks, j in 1..R where Contract[i]=1 /\ performance[j]=1)(map[i] = j);                     
                                                     
 solve minimize max(t in tasks)
            (start[t] + d[t]);
