@@ -39,9 +39,11 @@ constraint (T=3 -> Arch[T]=2 ) in C3.assumptions /\ (T=1 -> WCEC[T]=300) in C3.g
 %%%%%%%%%%%%%%% platform contract %%%%%%%%%%%%%%%%%
 var 1..proce:p;
 var Contract:C4;
+var Contract:C5;
+var Contract:C6;
 constraint (p=1-> mode[p]=1 ) in C4.assumptions;
-constraint (p=0-> mode[p]=0 ) in C4.assumptions;
-constraint (p=2-> mode[p]=0 ) in C4.assumptions;
+constraint (p=0-> mode[p]=0 ) in C5.assumptions;
+constraint (p=2-> mode[p]=0 ) in C6.assumptions;
                                                                                               
 solve minimize max(t in tasks)
            (start[t] + d[t]); 
