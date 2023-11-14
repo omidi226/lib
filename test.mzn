@@ -10,19 +10,20 @@ predicate conjunction(var Contract: c3,var Contract: c1,var Contract: c2) =
 
 int:n;
 int:m;
-int:R;
+array [tasks] of var int: d;
 int:p;
-
+int:Arch_size;
 
 set of int:tasks=1..n;
+set of int:Archs=1..Arch_size;
 
-array [1..n] of var 1..p:Arch;
-array [1..n,1..p] of var int:WCEC;
-%array [1..p] of var int:mode; 
+array [Archs] of int:alpha;
+array [tasks] of Archs:beta;
+array [tasks] of int:gamma;
+array [1..n,Archs] of int:WCEC;
+array [1..2] of Archs:mode; 
 
 %%%%%%%%%%%%%%% app Contract  %%%%%%%%%%%%%%%%%%%%%
-
-array [tasks] of var int: T;
 var Contract:C; 
 var Contract:C1;
 var Contract:C2;
@@ -30,29 +31,31 @@ var Contract:C3;
 var Contract:C_con1; %c_conjuction1
 var Contract:C_con2; %c_conjuction2
 
-constraint (Arch[T[1]]=1 ) in C1.assumptions;
-constraint (WCEC[1,1]=100) in C1.guarantees;  
-constraint (WCEC[1,2]=200) in C1.guarantees; 
-constraint (WCEC[1,3]=300) in C1.guarantees; 
+constraint (beta[1]=1) in C1.assumptions;
+constraint (WCEC[1,1]=1000000) in C1.guarantees;  
 
-constraint (Arch[T[2]]=1 ) in C2.assumptions;
-constraint (WCEC[2,1]=100) in C2.guarantees;
-constraint (WCEC[2,2]=200) in C2.guarantees;
-constraint (WCEC[2,3]=300) in C2.guarantees;
-     
-constraint (Arch[T[3]]=3 ) in C3.assumptions; 
-constraint (WCEC[3,1]=100) in C3.guarantees;
-constraint (WCEC[3,2]=200) in C3.guarantees;
-constraint (WCEC[3,3]=300) in C3.guarantees;
+constraint (beta[2]=1 ) in C2.assumptions;
+constraint (WCEC[2,1]=2000000) in C2.guarantees;
+    
+constraint (beta[3]=1 ) in C3.assumptions; 
+constraint (WCEC[3,1]=3000000) in C3.guarantees;
 
 constraint conjunction(C_con1,C1,C2);
 constraint conjunction(C_con2,C_con1,C3);
 
 
-constraint forall(i in tasks) (Arch[i]=1) in C.assumptions;
+constraint forall(i in tasks) (beta[i]=1) in C.assumptions;
 
 %%%%%%%%%%%%%%% platform contract %%%%%%%%%%%%%%%%%
+var Contract:C4;
+var Contract:C5;
+constraint (mode[1]=1 ) in C4.assumptions;
+constraint (d[1]= WCEC[1,1] * 1 div 1000000) in C4.guarantees; 
+constraint (d[2]= WCEC[2,1] * 1 div 2000000) in C4.guarantees;
+constraint (d[3]= WCEC[3,1] * 1 div 3000000) in C4.guarantees;
 
-
-                                                                                                                                                                                            
-solve satisfy; 
+                                                                                                                                                                                     constraint (mode[1]=2 ) in C5.assumptions;
+                                                                                                                                                                                     constraint (d[1]= WCEC[1,1] * 1 div 1000000) in C5.guarantees; 
+constraint (d[2]= WCEC[2,1] * 1 div 2000000) in C5.guarantees;
+constraint (d[3]= WCEC[3,1] * 1 div 3000000) in C5.guarantees;
+solve satisfy;                                                
