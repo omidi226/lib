@@ -58,4 +58,5 @@ constraint (d[3]= WCEC[3,1]  div 3000000) in C4.guarantees;
                                                                                                                                                                                      constraint (d[1]= WCEC[1,1]  div 1000000) in C5.guarantees; 
 constraint (d[2]= WCEC[2,1]  div 2000000) in C5.guarantees;
 constraint (d[3]= WCEC[3,1]  div 3000000) in C5.guarantees;
+
 solve satisfy;                                                
