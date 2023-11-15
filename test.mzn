@@ -10,8 +10,8 @@ predicate conjunction(var Contract: c3,var Contract: c1,var Contract: c2) =
 
 int:n;
 int:m;
-array [tasks] of var 1 ..: d;
-int:p;
+array [tasks] of var int: d;
+int:R;
 int:Arch_size;
 
 set of int:tasks=1..n;
@@ -21,7 +21,7 @@ array [Archs] of int:alpha;
 array [tasks] of Archs:beta;
 array [tasks] of int:gamma;
 array [1..n,Archs] of int:WCEC;
-array [Archs] of 1..2:mode; 
+array [1..R] of 1..2:mode; 
 
 %%%%%%%%%%%%%%% app Contract  %%%%%%%%%%%%%%%%%%%%%
 var Contract:C; 
@@ -48,15 +48,27 @@ constraint forall(i in tasks) (beta[i]=1) in C.assumptions;
 
 %%%%%%%%%%%%%%% platform contract %%%%%%%%%%%%%%%%%
 var Contract:C4;
-var Contract:C5;
-constraint (mode[1]=1 ) in C4.assumptions;
-constraint (d[1]= WCEC[1,1]  div 1000000) in C4.guarantees; 
-constraint (d[2]= WCEC[2,1] div 2000000) in C4.guarantees;
-constraint (d[3]= WCEC[3,1]  div 3000000) in C4.guarantees;
+constraint (mode[1]=1 \/ mode[2]=1 \/ mode[3]=2 ) in C4.assumptions;
+constraint (WCEC[1,1]  div 1000000) in C4.guarantees; 
+constraint (WCEC[2,1] div 2000000) in C4.guarantees;
+constraint ( WCEC[3,1]  div 3000000) in C4.guarantees;
 
-                                                                                                                                                                                     constraint (mode[2]=1 ) in C5.assumptions;
-                                                                                                                                                                                     constraint (d[1]= WCEC[1,1]  div 1000000) in C5.guarantees; 
-constraint (d[2]= WCEC[2,1]  div 2000000) in C5.guarantees;
-constraint (d[3]= WCEC[3,1]  div 3000000) in C5.guarantees;
+                                                                                                                                                                                     
+                                                                                                                                                                                     
+constraint d[1]= WCEC[1,1]  div 1000000;
+constraint d[2]= WCEC[2,1]  div 1000000;
+constraint d[3]= WCEC[3,1]  div 3000000;
+%%%%%%%%%%%%%%%%%%%%%% scheduling%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+var int:TIME=sum(d);
+array[tasks]  of var int :start;
+array [1..m,1..2]of tasks: next;
 
-solve satisfy;                                                
+constraint forall (i in 1..m)
+        (start[next[i,1]] + d[next[i,1]]
+        <= start[next[i,2]]);
+
+%constraint cumulative(start,d,gamma,R);
+%constraint diffn(start,gamma,d,[1 | t in tasks]);
+  
+solve minimize max(t in tasks)
+           (start[t] + d[t]);                                               
