@@ -13,6 +13,6 @@ WCEC=[|1000000,
       |3000000|];
 mode=[1,1,2];  % mode1=highPerformance   mode2=lowPower
 
-next=[|1,2          
-      |1,3|];
+next=[|1,3          
+      |2,3|];
       

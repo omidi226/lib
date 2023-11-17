@@ -60,15 +60,15 @@ constraint d[2]= WCEC[2,1]  div 1000000;
 constraint d[3]= WCEC[3,1]  div 3000000;
 %%%%%%%%%%%%%%%%%%%%%% scheduling%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 var int:TIME=sum(d);
-array[tasks]  of var int :start;
+array[tasks]  of var 0..5 :start;
 array [1..m,1..2]of tasks: next;
 
 constraint forall (i in 1..m)
         (start[next[i,1]] + d[next[i,1]]
         <= start[next[i,2]]);
 
-%constraint cumulative(start,d,gamma,R);
-%constraint diffn(start,gamma,d,[1 | t in tasks]);
+constraint cumulative(start,d,gamma,R);
+constraint diffn(start,gamma,d,[1 | t in tasks]);
   
 solve minimize max(t in tasks)
            (start[t] + d[t]);                                               
