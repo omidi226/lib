@@ -21,7 +21,8 @@ array [Archs] of int:alpha;
 array [tasks] of Archs:beta;
 array [tasks] of int:gamma;
 array [1..n,Archs] of int:WCEC;
-array [1..R] of 1..2:mode; 
+array [Archs,1..2] of int:ERate;
+array [1..R] of int:mode; 
 
 %%%%%%%%%%%%%%% app Contract  %%%%%%%%%%%%%%%%%%%%%
 var Contract:C; 
@@ -48,16 +49,21 @@ constraint forall(i in tasks) (beta[i]=1) in C.assumptions;
 
 %%%%%%%%%%%%%%% platform contract %%%%%%%%%%%%%%%%%
 var Contract:C4;
-constraint (mode[1]=1 \/ mode[2]=1 \/ mode[3]=2 ) in C4.assumptions;
-constraint (WCEC[1,1]  div 1000000) in C4.guarantees; 
-constraint (WCEC[2,1] div 2000000) in C4.guarantees;
-constraint ( WCEC[3,1]  div 3000000) in C4.guarantees;
+var Contract:C5;
+var Contract:C6;
+
+constraint (mode[1]=1 \/ mode[1]=2  ) in C4.assumptions;
+constraint (mode[1]=1 -> ERate[1,1]=1000000 \/ mode[1]=2-> ERate[1,2]=1000000 ) in C4.guarantees; 
+
+constraint (mode[2]=1 \/ mode[2]=2  ) in C5.assumptions;
+constraint (mode[2]=1 -> ERate[1,2]=1000000 \/ mode[2]=2-> ERate[1,2]=1000000) in C5.guarantees;
+
+constraint (mode[3]=1 \/ mode[3]=2  ) in C6.assumptions;
+constraint (mode[3]=1 -> ERate[1,1]=1000000 \/ mode[3]=2-> ERate[1,2]=1000000) in C6.guarantees;
 
                                                                                                                                                                                      
                                                                                                                                                                                      
-constraint d[1]= WCEC[1,1]  div 1000000;
-constraint d[2]= WCEC[2,1]  div 1000000;
-constraint d[3]= WCEC[3,1]  div 3000000;
+constraint  forall(i in tasks, j in 1..2)(d[i]= WCEC[i,1]  div ERate[1,j]);
 %%%%%%%%%%%%%%%%%%%%%% scheduling%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 var int:TIME=sum(d);
 array[tasks]  of var 0..5 :start;
