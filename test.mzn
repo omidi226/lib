@@ -56,14 +56,19 @@ constraint (mode[1]=1 \/ mode[1]=2  ) in C4.assumptions;
 constraint (mode[1]=1 -> ERate[1,1]=1000000 \/ mode[1]=2-> ERate[1,2]=1000000 ) in C4.guarantees; 
 
 constraint (mode[2]=1 \/ mode[2]=2  ) in C5.assumptions;
-constraint (mode[2]=1 -> ERate[1,2]=1000000 \/ mode[2]=2-> ERate[1,2]=1000000) in C5.guarantees;
+constraint (mode[2]=1 -> ERate[1,1]=1000000 \/ mode[2]=2-> ERate[1,2]=1000000) in C5.guarantees;
 
 constraint (mode[3]=1 \/ mode[3]=2  ) in C6.assumptions;
 constraint (mode[3]=1 -> ERate[1,1]=1000000 \/ mode[3]=2-> ERate[1,2]=1000000) in C6.guarantees;
 
                                                                                                                                                                                      
                                                                                                                                                                                      
-constraint  forall(i in tasks, j in 1..2)(d[i]= WCEC[i,1]  div ERate[1,j]);
+constraint  forall(i in tasks)(mode[1]=1 -> d[i]= WCEC[i,1]  div ERate[1,1] );
+constraint  forall(i in tasks)(mode[1]=2 -> d[i]= WCEC[i,1]  div ERate[1,2] );
+constraint  forall(i in tasks)(mode[2]=1 -> d[i]= WCEC[i,1]  div ERate[1,1] );
+constraint  forall(i in tasks)(mode[2]=2 -> d[i]= WCEC[i,1]  div ERate[1,2] );
+constraint  forall(i in tasks)(mode[3]=1 -> d[i]= WCEC[i,1]  div ERate[1,1] );
+constraint  forall(i in tasks)(mode[3]=2 -> d[i]= WCEC[i,1]  div ERate[1,2] );
 %%%%%%%%%%%%%%%%%%%%%% scheduling%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 var int:TIME=sum(d);
 array[tasks]  of var 0..5 :start;
