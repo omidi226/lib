@@ -91,4 +91,5 @@ constraint cumulative(start,d,gamma,R);
 constraint diffn(start,gamma,d,[1 | t in tasks]);
   
 solve minimize max(t in tasks)
-           (start[t] + d[t]);                                               
+           (start[t] + d[t]);  
+                                                        
