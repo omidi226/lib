@@ -17,12 +17,7 @@ int:Arch_size;
 set of int:tasks=1..n;
 set of int:Archs=1..Arch_size;
 
-array [Archs] of int:alpha;
-array [tasks] of Archs:beta;
-array [tasks] of int:gamma;
-array [1..n,Archs] of int:WCEC;
-array [Archs,1..2] of int:ERate;
-array [1..R] of int:mode; 
+
 
 %%%%%%%%%%%%%%% app Contract  %%%%%%%%%%%%%%%%%%%%%
 var Contract:C; 
@@ -69,11 +64,25 @@ constraint  forall(i in tasks)(mode[2]=1 -> d[i]= WCEC[i,1]  div ERate[1,1] );
 constraint  forall(i in tasks)(mode[2]=2 -> d[i]= WCEC[i,1]  div ERate[1,2] );
 constraint  forall(i in tasks)(mode[3]=1 -> d[i]= WCEC[i,1]  div ERate[1,1] );
 constraint  forall(i in tasks)(mode[3]=2 -> d[i]= WCEC[i,1]  div ERate[1,2] );
-%%%%%%%%%%%%%%%%%%%%%% scheduling%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%% mapper%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 var int:TIME=sum(d);
+array [Archs] of int:alpha;
+array [tasks] of Archs:beta;
+array [tasks] of int:gamma;
+array [1..n,Archs] of int:WCEC;
+array [Archs,1..2] of int:ERate;
+array [1..R] of int:mode; 
+array [Archs] of int:cost;
 array[tasks]  of var 0..5 :start;
 array [1..m,1..2]of tasks: next;
+var Contract:Cm;
 
+constraint (true) in Cm.assumptions;
+constraint (beta[1]=1 \/ beta[2]=1 \/beta[3]=1) in Cm.guarantees;
+constraint (mode[1]=1 \/ mode[1]=2) in Cm.guarantees;
+constraint (mode[2]=1 \/ mode[2]=2) in Cm.guarantees;
+constraint (mode[3]=1 \/ mode[3]=2) in Cm.guarantees;
+constraint (cost[1]=1 ) in Cm.guarantees;
 constraint forall (i in 1..m)
         (start[next[i,1]] + d[next[i,1]]
         <= start[next[i,2]]);
