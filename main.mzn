@@ -26,35 +26,26 @@ array [Archs,Res] of var int:mode;
 
 %%%%%%%%%%%%%%% app Contract  %%%%%%%%%%%%%%%%%%%%%
 
-var Contract:C_con1; %c_conjuction1
-var Contract:C_con2; %c_conjuction2
 array[tasks] of var Contract:AppContract;
-constraint (true) in AppContract[1].assumptions;% beta[1]=1 \/beta[1]=2  
-constraint (WCEC[1]=WCECtable[1,beta[1]]) in AppContract[1].guarantees;  
 
-constraint (true ) in AppContract[2].assumptions;
-constraint (WCEC[2]=WCECtable[2,beta[2]]) in AppContract[2].guarantees;
-    
-constraint (true ) in AppContract[3].assumptions; 
-constraint (WCEC[3]=WCECtable[3,beta[3]]) in AppContract[3].guarantees;
+constraint forall(i in tasks) (
+  (true) in AppContract[i].assumptions /\ % beta[1]=1 \/beta[1]=2  
+  (WCEC[i]=WCECtable[i,beta[i]]) in AppContract[i].guarantees);  
 
-constraint conjunction(C_con1,AppContract[1],AppContract[2]);
-constraint conjunction(C_con2,C_con1,AppContract[3]);
+constraint forall( i,j,k in tasks) (conjunction(AppContract[k],AppContract[i],AppContract[j]));
 
-%constraint forall(i in tasks) (beta[i]=1) in AppContract[4].assumptions;
 %%%%%%%%%%%%%%% platform contract %%%%%%%%%%%%%%%%%
 
 array[Archs,Res] of var Contract:PlatContract;
+
 constraint forall (i in Archs,j in Res where j<=alpha[i]) (   
   (true  ) in PlatContract[i,j].assumptions /\ 
   (ERate[i,j]=ERatetable[i,mode[i,j]]) in PlatContract[i,j].guarantees
-);%mode[1,?]!=2;
+);%mode[1,?]!=2
 
 
-                                                                                                                                                                                     
-                                                                                                                                                                                     
-
-
+                                                                                                                                                                                   
+                                                                                                                                                                                 
 %%%%%%%%%%%%%%%%%%%%%% mapper%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 constraint  forall(i in tasks)(d[i]= WCEC[i ]  div ERate[beta[i],gamma[i]] );
 var int:TIME=sum(d);
