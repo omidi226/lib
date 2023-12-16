@@ -48,7 +48,7 @@ constraint forall (i in Archs,j in Res where j<=alpha[i]) (
                                                                                                                                                                                  
 %%%%%%%%%%%%%%%%%%%%%% mapper%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 constraint  forall(i in tasks)(d[i]= WCEC[i ]  div ERate[beta[i],gamma[i]] );
-var int:TIME=sum(d);
+%var int:TIME=sum(d);
 %array [Archs] of int:cost;
 array[tasks]  of var 0..5 :start;
 array [1..m,1..2]of tasks: next;
