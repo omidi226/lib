@@ -1,10 +1,11 @@
 % Use this editor as a MiniZinc scratch book
+% Use this editor as a MiniZinc scratch book
 include "globals.mzn";
 
-type Contract = var record ( var set of 0..1: assumptions, var set of 0..1: guarantees);
+type Contract = var record ( var 0..1: assumptions, var 0..1: guarantees);
 
 predicate conjunction(var Contract: c3,var Contract: c1,var Contract: c2) =
-(c3.assumptions = c1.assumptions union c2.assumptions) /\( c3.guarantees = c1.guarantees intersect c2.guarantees);
+(c3.assumptions = c1.assumptions \/ c2.assumptions) /\( c3.guarantees = c1.guarantees /\ c2.guarantees);
 
 int:n;
 int:m;
@@ -60,7 +61,8 @@ predicate enforce(var Contract:c)=
 (
   forall(a in c.assumptions)(a=1 )/\ forall(g in c.guarantees)(g=1 )
 );
- 
+
+
 
 %constraint (cost[1]=1 /\ cost[2]=1 /\cost[3]=1 ) in Cm.guarantees;
 constraint forall (i in 1..m)
