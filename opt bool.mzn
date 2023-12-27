@@ -2,7 +2,7 @@
 % Use this editor as a MiniZinc scratch book
 include "globals.mzn";
 
-type Contract = var record ( var 0..1: assumptions, var 0..1: guarantees);
+type Contract = var record ( var bool: assumptions, var bool: guarantees);
 
 predicate conjunction(var Contract: c3,var Contract: c1,var Contract: c2) =
 (c3.assumptions = c1.assumptions \/ c2.assumptions) /\( c3.guarantees = c1.guarantees /\ c2.guarantees);
@@ -30,8 +30,8 @@ array [Archs,Res] of var 1..2:mode;
 array[tasks] of var Contract:AppContract;
 
 constraint forall(i in tasks) (
-  (true) in AppContract[i].assumptions /\ % beta[1]=1 \/beta[1]=2  
-  (WCEC[i]=WCECtable[i,beta[i]]) in AppContract[i].guarantees);  
+   AppContract[i].assumptions= true /\ % beta[1]=1 \/beta[1]=2  
+  (WCEC[i]=WCECtable[i,beta[i]]) ->  AppContract[i].guarantees=WCEC[i]);  
 
 constraint forall( i,j,k in tasks) (conjunction(AppContract[k],AppContract[i],AppContract[j]));
 
@@ -40,8 +40,8 @@ constraint forall( i,j,k in tasks) (conjunction(AppContract[k],AppContract[i],Ap
 array[Archs,Res] of var Contract:PlatContract;
 
 constraint forall (i in Archs,j in Res where j<=alpha[i]) (   
-  (true  ) in PlatContract[i,j].assumptions /\ 
-  (ERate[i,j]=ERatetable[i,mode[i,j]]) in PlatContract[i,j].guarantees
+  PlatContract[i,j].assumptions=true /\ 
+  (ERate[i,j]=ERatetable[i,mode[i,j]]) -> PlatContract[i,j].guarantees=ERate[i,j]
 );%mode[1,?]!=2
 
 
@@ -54,8 +54,8 @@ constraint  forall(i in tasks)(d[i]= WCEC[i ]  div ERate[beta[i],gamma[i]] );
 array[tasks]  of var 0..5 :start;
 array [1..m,1..2]of tasks: next;
 var Contract:Cm;
-constraint (true) in Cm.assumptions;
-constraint (true) in Cm.guarantees; % cost gurartee constraint 
+constraint  Cm.assumptions=true;
+constraint  Cm.guarantees=true; % cost gurartee constraint 
 
 predicate enforce(var Contract:c)=
 (
