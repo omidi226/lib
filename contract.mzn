@@ -1,6 +1,7 @@
 % Use this editor as a MiniZinc scratch book
 include "globals.mzn";
-type Contract = var record ( var bool: assumptions, var bool: guarantees);
+type Contract = record ( var int: input_vars, var int: output_vars,var bool: assumptions, var bool: guarantees);
+
 
 %predicate is_consistent(var Contract: c) =
 %  exists (g in c.guarantees) (g=1);
@@ -22,15 +23,26 @@ predicate is_refine(var Contract:c2, var Contract:c1)=
 (c1.assumptions -> c2.assumptions /\ (c1.assumptions -> c1.guarantees )->c1.assumptions->c1.guarantees
  );
  
-function var Contract: compose1(var Contract: c1,var Contract: c2) :: promise_total=
-(
-assumptions: (c1.assumptions /\ c2.assumptions)\/not(c1.guarantees /\ c2.guarantees) , guarantees: c1.guarantees /\ c2.guarantees
-
+function var Contract: compose(var Contract: c1, var Contract: c2) = %:: promise_total=
+( input_vars:c1.input_vars,
+  output_vars:c2.output_vars,
+  assumptions: (c1.assumptions /\ c2.assumptions) \/ not(c1.guarantees /\ c2.guarantees),
+  guarantees: (c1.guarantees /\ c2.guarantees)
 );
 
-predicate conjunction(var Contract: c3,var Contract: c1,var Contract: c2) =
-(c3.assumptions = c1.assumptions \/ c2.assumptions) /\( c3.guarantees = c1.guarantees /\ c2.guarantees);
+function var Contract: conjunction(var Contract: c1, var Contract: c2) = (
+  input_vars:c1.input_vars,
+  output_vars:c2.output_vars,
+  assumptions: c1.assumptions \/ c2.assumptions,
+  guarantees: c1.guarantees /\ c2.guarantees
+);
 
+predicate enforce(var Contract: c) = (
+  c.assumptions -> c.guarantees
+);
+
+predicate assume(var Contract: c) = 
+  c.assumptions;
 
 %FIXME
 %predicate is_Complete( var Contract:c)= 
@@ -47,34 +59,46 @@ predicate conjunction(var Contract: c3,var Contract: c1,var Contract: c2) =
 
 
 % variables
-var -5..5: i;
-var -5..5: o;
-var -5..5: op;
-var -5..5: u;
+var int: i;
+var int: o;
+var int: o_p;
+% var -15..15: u;
 
 var Contract: c3;
-var Contract: c1;
-constraint  c1.assumptions=(-2<=i /\ i<=2);
-constraint c1.guarantees=(o-i<=0 /\ i-2*o<=2);
+var Contract: c1 = (
+  input_vars:i,
+  output_vars:o,
+  assumptions:(abs(i)<=2),
+  guarantees: (o<=i /\ i<=2*o+20)
+);
 
 
-var Contract: c2;
-constraint  c2.assumptions=(o<=0.2 /\ -o<=1);
-constraint c2.guarantees=(op-o<=0);
-
+var Contract: c2 = (
+  input_vars:o,
+  output_vars:o_p,
+  assumptions:(o <= 0.2 /\ -o <= 1),
+  guarantees: (o_p<=o)
+);
 
 
 %constraint is_compatible(c1);
 %constraint is_consistent(c1);
 %constraint is_correct(c1);
 %constraint is_Complete(c2);
-constraint  c3=compose1(c1,c2);
+constraint  c3=compose(c1,c2);
 %constraint c3.assumptions = c1.assumptions union c2.assumptions;
 %constraint c3.guarantees = c1.guarantees union c2.guarantees;
 %constraint compose (c3,c1,c2);
-%constraint conjunction (c3,c1,c2);
+% constraint conjunction (c3,c1,c2);
 %constraint is_quotient(c3,c1,c2);
 %constraint is_refine(c1,c4);
 
+% Now say which contracts must hold
+constraint enforce(c3);
+
+% Which assumptions are valid from the environment?
+constraint assume(c3);
 
 solve satisfy ;
+
+output ["Domain of i: \(dom(i)), o: \(dom(o)), o_p: \(dom(o_p))\n"];
