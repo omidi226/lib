@@ -69,7 +69,7 @@ var Contract: c1 = (
   input_vars:i,
   output_vars:o,
   assumptions:(abs(i)<=2),
-  guarantees: (o<=i /\ i<=2*o+20)
+  guarantees: (o<=i /\ i<=2*o+2)
 );
 
 
@@ -89,7 +89,7 @@ constraint  c3=compose(c1,c2);
 %constraint c3.assumptions = c1.assumptions union c2.assumptions;
 %constraint c3.guarantees = c1.guarantees union c2.guarantees;
 %constraint compose (c3,c1,c2);
-% constraint conjunction (c3,c1,c2);
+% constraint c3=conjunction (c1,c2);
 %constraint is_quotient(c3,c1,c2);
 %constraint is_refine(c1,c4);
 
