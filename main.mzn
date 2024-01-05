@@ -69,7 +69,7 @@ constraint forall (i in 1..m)
 
 constraint cumulative(start,d,[1 | t in tasks],sum(alpha));
 constraint sum(alpha)>0;
-%constraint diffn(start,gamma,d,[1 | t in tasks]);
+
 constraint 
   let {array [tasks] of var 1..Arch_size*3: r = [(beta[i]-1)*3+gamma[i]|i in tasks]; 
   } in 
