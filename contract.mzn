@@ -87,13 +87,13 @@ var Contract: c2 = (
 %constraint is_consistent(c1);
 %constraint is_correct(c1);
 %constraint is_Complete(c2);
-%constraint  c3=compose(c1,c2);
+constraint  c3=compose(c1,c2);
 %constraint c3.assumptions = c1.assumptions union c2.assumptions;
 %constraint c3.guarantees = c1.guarantees union c2.guarantees;
 %constraint compose (c3,c1,c2);
 %constraint c3=conjunction (c1,c2);
 %constraint is_quotient(c3,c1,c2);
-constraint c3=is_refine(c2,c1);
+%constraint c3=is_refine(c2,c1);
 
 % Now say which contracts must hold
 constraint enforce(c3);
