@@ -1,11 +1,7 @@
 % Use this editor as a MiniZinc scratch book
 % Use this editor as a MiniZinc scratch book
 include "globals.mzn";
-
-type Contract = var record ( var bool: assumptions, var bool: guarantees);
-
-predicate conjunction(var Contract: c3,var Contract: c1,var Contract: c2) =
-(c3.assumptions = c1.assumptions \/ c2.assumptions) /\( c3.guarantees = c1.guarantees /\ c2.guarantees);
+include "lib.mzn";
 
 int:n;
 int:m;
@@ -33,7 +29,7 @@ constraint forall(i in tasks) (
    AppContract[i].assumptions= true /\ % beta[1]=1 \/beta[1]=2  
   (WCEC[i]=WCECtable[i,beta[i]]) ->  AppContract[i].guarantees=WCEC[i]);  
 
-constraint forall( i,j,k in tasks) (conjunction(AppContract[k],AppContract[i],AppContract[j]));
+constraint forall( i,j,k in tasks) (AppContract[k]=conjunction(AppContract[i],AppContract[j]));
 
 %%%%%%%%%%%%%%% platform contract %%%%%%%%%%%%%%%%%
 
@@ -57,10 +53,7 @@ var Contract:Cm;
 constraint  Cm.assumptions=true;
 constraint  Cm.guarantees=true; % cost gurartee constraint 
 
-predicate enforce(var Contract:c)=
-(
-  forall(a in c.assumptions)(a=1 )/\ forall(g in c.guarantees)(g=1 )
-);
+
 
 
 
