@@ -1,5 +1,4 @@
 % Use this editor as a MiniZinc scratch book
-% Use this editor as a MiniZinc scratch book
 include "globals.mzn";
 include "lib.mzn";
 

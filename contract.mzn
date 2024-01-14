@@ -31,7 +31,7 @@ function var Contract: is_refine(var Contract:c2, var Contract:c1)=
 function var Contract: compose(var Contract: c1, var Contract: c2) = %:: promise_total=
 ( input_vars:c1.input_vars,
   output_vars:c2.output_vars,
-  assumptions: (c1.assumptions /\ c2.assumptions) \/ not(c1.guarantees /\ c2.guarantees),
+  assumptions: (c1.assumptions /\ c2.assumptions) \/ (not (c1.guarantees /\ c2.guarantees)) ,
   guarantees: (c1.guarantees /\ c2.guarantees)
 );
 
@@ -43,7 +43,7 @@ function var Contract: conjunction(var Contract: c1, var Contract: c2) = (
 );
 
 predicate enforce(var Contract: c) = (
-  c.assumptions -> c.guarantees
+  c.assumptions-> c.guarantees
 );
 
 predicate assume(var Contract: c) = 
@@ -64,24 +64,24 @@ predicate assume(var Contract: c) =
 
 
 % variables
-var 0..10: i;
-var 0..10: o;
-var 0..10: o_p;
+var -10..10: i;
+var -10..10: o;
+var -10..10: o_p;
 % var -15..15: u;
 
 var Contract: c3;
 var Contract: c1 = (
   input_vars:i,
   output_vars:o,
-  assumptions:(i<=2),
-  guarantees: (o<=3)
+  assumptions:(i<=20),
+  guarantees: (o-i <= 0)
 );
 
 var Contract: c2 = (
   input_vars:o,
   output_vars:o_p,
-  assumptions:(o <= 3),
-  guarantees: (o_p<=o)
+  assumptions:(o <= 2),
+  guarantees: (o_p-o <= 0)
 );
 %constraint is_compatible(c1);
 %constraint is_consistent(c1);
@@ -103,5 +103,5 @@ constraint assume(c3);
 
 solve satisfy ;
 
-output ["Domain of i: \(dom(i)), o: \(dom(o)), o_p: \(dom(o_p))\n"];
+output ["Domain of i: \((i)), o: \((o)), o_p: \((o_p))\n"];
 
