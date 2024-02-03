@@ -1,7 +1,8 @@
 
 % Use this editor as a MiniZinc scratch book
 include "globals.mzn";
-type Contract = record ( var int: input_vars, var int: output_vars,var bool: assumptions, var bool: guarantees);
+%type Contract = record ( var int: input_vars, var int: output_vars,var bool: assumptions, var bool: guarantees);
+type Contract = record (var bool: assumptions, var bool: guarantees);
 
 
 %predicate is_consistent(var Contract: c) =
@@ -21,29 +22,40 @@ type Contract = record ( var int: input_vars, var int: output_vars,var bool: ass
  
 %c2 << c1     AC1 implies AC2 , and 2) AC2 -> GC2 implies AC1-> GC1 
 function var Contract: is_refine(var Contract:c2, var Contract:c1)=
-(%c1.assumptions -> c2.assumptions /\ (c2.assumptions -> c2.guarantees )->c1.assumptions->c1.guarantees
-  input_vars:c1.input_vars,
-  output_vars:c2.output_vars,
-  assumptions:c2.assumptions ->c1.assumptions,
-  guarantees:c1.guarantees->c2.guarantees
- );
+let {
+  Contract: c1_can = (assumptions: c1.assumptions,guarantees:c1.guarantees\/not c1.assumptions);
+  Contract: c2_can = (assumptions: c2.assumptions,guarantees:c2.guarantees\/not c2.assumptions)
+  } in
+  (%c1.assumptions -> c2.assumptions /\ (c2.assumptions -> c2.guarantees )->c1.assumptions->c1.guarantees
+  %   input_vars:c1.input_vars,
+  %   output_vars:c2.output_vars,
+    assumptions:c2_can.assumptions ->c1_can.assumptions,
+    guarantees:c1_can.guarantees->c2_can.guarantees
+   );
  
 function var Contract: compose(var Contract: c1, var Contract: c2) = %:: promise_total=
-( input_vars:c1.input_vars,
-  output_vars:c2.output_vars,
-  assumptions: (c1.assumptions /\ c2.assumptions) \/ (not (c1.guarantees /\ c2.guarantees)) ,
-  guarantees: (c1.guarantees /\ c2.guarantees)
-);
+let {
+  Contract: c1_can = (assumptions: c1.assumptions,guarantees:c1.guarantees\/not c1.assumptions);
+  Contract: c2_can = (assumptions: c2.assumptions,guarantees:c2.guarantees\/not c2.assumptions)
+  } in
+  (
+    assumptions: (c1_can.assumptions /\ c2_can.assumptions) \/ (not (c1_can.guarantees /\ c2_can.guarantees)) ,
+    guarantees: (c1_can.guarantees /\ c2_can.guarantees )
+  );
 
-function var Contract: conjunction(var Contract: c1, var Contract: c2) = (
-  input_vars:c1.input_vars,
-  output_vars:c2.output_vars,
-  assumptions: c1.assumptions \/ c2.assumptions,
-  guarantees: c1.guarantees /\ c2.guarantees
-);
+function var Contract: conjunction(var Contract: c1, var Contract: c2) = 
+let {
+  Contract: c1_can = (assumptions: c1.assumptions,guarantees:c1.guarantees\/not c1.assumptions);
+  Contract: c2_can = (assumptions: c2.assumptions,guarantees:c2.guarantees\/not c2.assumptions)
+  } in
+
+  (
+    assumptions: c1_can.assumptions \/ c2_can.assumptions,
+    guarantees: c1_can.guarantees /\ c2_can.guarantees
+  );
 
 predicate enforce(var Contract: c) = (
-  c.assumptions-> c.guarantees
+ c.assumptions->c.guarantees 
 );
 
 predicate assume(var Contract: c) = 
@@ -66,22 +78,24 @@ predicate assume(var Contract: c) =
 % variables
 var -10..10: i;
 var -10..10: o;
+%var -10..10: I;
+%var -10..10: O;
 var -10..10: o_p;
 % var -15..15: u;
 
 var Contract: c3;
 var Contract: c1 = (
-  input_vars:i,
-  output_vars:o,
-  assumptions:(i<=20),
-  guarantees: (o-i <= 0)
+%   input_vars:i,
+%   output_vars:o,
+  assumptions:(i<=10),
+  guarantees: (o<=i /\ i<=2*o+10  )
 );
 
 var Contract: c2 = (
-  input_vars:o,
-  output_vars:o_p,
-  assumptions:(o <= 2),
-  guarantees: (o_p-o <= 0)
+%   input_vars:o,
+%   output_vars:o_p,
+  assumptions:(o<=1 ),
+  guarantees: (o>=o_p )
 );
 %constraint is_compatible(c1);
 %constraint is_consistent(c1);
@@ -101,7 +115,12 @@ constraint enforce(c3);
 % Which assumptions are valid from the environment?
 constraint assume(c3);
 
+% check some examples
+%constraint (i=1)/\(o_p=0); % satisfies both assumption and guarantee of cc
+%constraint (i=1)/\(o_p=3); % satisfies assumption, but violates gurantee of cc
+constraint (i=2)/\(o_p=0);
+
 solve satisfy ;
 
-output ["Domain of i: \((i)), o: \((o)), o_p: \((o_p))\n"];
+output ["Domain of i: \((i)), o: \((o)), o_p: \(o_p)\n"];
 
