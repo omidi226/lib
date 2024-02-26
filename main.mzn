@@ -10,6 +10,8 @@ int:n;
 int:m;
 array [tasks] of var 0..: d;
 int:R;
+int:s1;
+int:s2;
 int:Arch_size;
 
 set of int:tasks=1..n;
@@ -29,8 +31,10 @@ array [Archs,Res] of var 1..2:mode;
 array[tasks] of var Contract:AppContract;
 
 constraint forall(i in tasks) (
+if s1 then
   (true) in AppContract[i].assumptions /\ % beta[1]=1 \/beta[1]=2  
-  (WCEC[i]=WCECtable[i,beta[i]]) in AppContract[i].guarantees);  
+  (WCEC[i]=WCECtable[i,beta[i]]) in AppContract[i].guarantees
+  else s2 endif);  
 
 constraint forall( i,j,k in tasks) (conjunction(AppContract[k],AppContract[i],AppContract[j]));
 
