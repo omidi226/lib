@@ -11,7 +11,7 @@ int:m;
 array [tasks] of var 0..: d;
 int:R;
 int:s1;
-int:s2;
+%bool:s2;
 int:Arch_size;
 
 set of int:tasks=1..n;
@@ -31,10 +31,9 @@ array [Archs,Res] of var 1..2:mode;
 array[tasks] of var Contract:AppContract;
 
 constraint forall(i in tasks) (
-if s1 then
-  (true) in AppContract[i].assumptions /\ % beta[1]=1 \/beta[1]=2  
-  (WCEC[i]=WCECtable[i,beta[i]]) in AppContract[i].guarantees
-  else s2 endif);  
+
+  (s1=1) in AppContract[i].assumptions /\ % beta[1]=1 \/beta[1]=2  
+  (WCEC[i]=WCECtable[i,beta[i]]) in AppContract[i].guarantees);  
 
 constraint forall( i,j,k in tasks) (conjunction(AppContract[k],AppContract[i],AppContract[j]));
 
@@ -43,12 +42,11 @@ constraint forall( i,j,k in tasks) (conjunction(AppContract[k],AppContract[i],Ap
 array[Archs,Res] of var Contract:PlatContract;
 
 constraint forall (i in Archs,j in Res where j<=alpha[i]) (   
-  (true  ) in PlatContract[i,j].assumptions /\ 
+  (s1=1  ) in PlatContract[i,j].assumptions /\ 
   (ERate[i,j]=ERatetable[i,mode[i,j]]) in PlatContract[i,j].guarantees
 );%mode[1,?]!=2
 
-
-                                                                                                                                                                                   
+                                                                                                                                                                                
                                                                                                                                                                                  
 %%%%%%%%%%%%%%%%%%%%%% mapper%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 constraint  forall(i in tasks)(d[i]= WCEC[i ]  div ERate[beta[i],gamma[i]] );
