@@ -23,9 +23,7 @@ predicate senario(var Contract: c1,var Contract: c2,var Contract: c3) = (
  c1.assumptions=true -> s1->c1.guarantees \/
  c2.assumptions=true -> s2->c2.guarantees \/
  c3.assumptions=true -> s3->c3.guarantees
- 
 );
 
-
-
+%conjunction ????
 
