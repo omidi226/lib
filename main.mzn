@@ -32,7 +32,7 @@ array[tasks] of var Contract:AppContract;
 
 constraint forall(i in tasks) (
 
-  (s1=1) in AppContract[i].assumptions /\ % beta[1]=1 \/beta[1]=2  
+  (true) in AppContract[i].assumptions /\ % beta[1]=1 \/beta[1]=2  
   (WCEC[i]=WCECtable[i,beta[i]]) in AppContract[i].guarantees);  
 
 constraint forall( i,j,k in tasks) (conjunction(AppContract[k],AppContract[i],AppContract[j]));
@@ -42,7 +42,7 @@ constraint forall( i,j,k in tasks) (conjunction(AppContract[k],AppContract[i],Ap
 array[Archs,Res] of var Contract:PlatContract;
 
 constraint forall (i in Archs,j in Res where j<=alpha[i]) (   
-  (s1=1  ) in PlatContract[i,j].assumptions /\ 
+  (true  ) in PlatContract[i,j].assumptions /\ 
   (ERate[i,j]=ERatetable[i,mode[i,j]]) in PlatContract[i,j].guarantees
 );%mode[1,?]!=2
 
