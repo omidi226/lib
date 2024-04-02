@@ -120,7 +120,7 @@ constraint assume(c3);
 %constraint (i=1)/\(o_p=3); % satisfies assumption, but violates gurantee of cc
 constraint (i=2)/\(o_p=0);
 
-solve satisfy ;
+%solve satisfy ;
 
-output ["Domain of i: \((i)), o: \((o)), o_p: \(o_p)\n"];
+%output ["Domain of i: \((i)), o: \((o)), o_p: \(o_p)\n"];
 
