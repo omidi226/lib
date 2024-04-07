@@ -50,7 +50,7 @@ let {
   } in
 
   (
-    assumptions: c1_can.assumptions \/ c2_can.assumptions,
+    assumptions: c1_can.assumptions \/ c2_can.assumptions ,
     guarantees: c1_can.guarantees /\ c2_can.guarantees
   );
 
