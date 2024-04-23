@@ -53,6 +53,18 @@ let {
     assumptions: c1_can.assumptions \/ c2_can.assumptions ,
     guarantees: c1_can.guarantees /\ c2_can.guarantees
   );
+  
+  function var Contract: conjunction3(var Contract: c1, var Contract: c2,var Contract: c3) = 
+let {
+  Contract: c1_can = (assumptions: c1.assumptions,guarantees:c1.guarantees\/not c1.assumptions);
+  Contract: c2_can = (assumptions: c2.assumptions,guarantees:c2.guarantees\/not c2.assumptions);
+  Contract: c3_can = (assumptions: c3.assumptions,guarantees:c3.guarantees\/not c3.assumptions)
+  } in
+
+  (
+    assumptions: c1_can.assumptions \/ c2_can.assumptions \/ c3_can.assumptions ,
+    guarantees: c1_can.guarantees /\ c2_can.guarantees/\ c3_can.guarantees
+  );
 
 predicate enforce(var Contract: c) = (
  c.assumptions->c.guarantees 

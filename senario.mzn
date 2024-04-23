@@ -58,23 +58,18 @@ var Contract: c3_3 = (
   guarantees: (p=10 )
 );
 
-var Contract: C1;
 var Contract: Contarct1;
-var Contract: C2;
 var Contract: Contract2;
-var Contract: C3;
 var Contract: Contract3;
 var Contract:contractcompose1;
 var Contract:contractcompose2;
 
-constraint C1=conjunction(c1_1,c1_2); 
-constraint Contarct1=conjunction(C1,c1_3);%contract component1
 
-constraint C2=conjunction(c2_1,c2_2); 
-constraint Contract2=conjunction(C2,c2_3);%contract component2
+constraint Contarct1=conjunction3(c1_1,c1_2,c1_3);%contract component1
+ 
+constraint Contract2=conjunction3(c2_1,c2_2,c2_3);%contract component2
 
-constraint C3=conjunction(c3_1,c3_2); 
-constraint Contract3=conjunction(C3,c3_3);%contract component3
+constraint Contract3=conjunction3(c3_1,c3_2,c3_3);%contract component3
 
 constraint contractcompose1=compose(Contarct1,Contract2);
 constraint contractcompose2=compose(contractcompose1,Contract3);
