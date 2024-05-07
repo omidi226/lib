@@ -1,6 +1,6 @@
 % Use this editor as a MiniZinc scratch book
 include "globals.mzn";
-include "LTLA.mzn";
+include "ltl_lib.mzn";
 include "contract.mzn";
 
 int:a;
