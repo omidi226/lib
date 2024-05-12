@@ -2,22 +2,31 @@
 include "globals.mzn";
 include "ltl_lib.mzn";
 include "contract.mzn";
+type trace_int = array[1..MAX_TIME] of var int;
 
+
+% function var Contract: ALU(var Contract:C,var Contract:C1)=
+
+%   (
+%     assumptions:true,
+%     guarantees:(forall(i in 1..10) (if (inst[i]=0) then  C.guarantees=C1.assumptions\/ C1.assumptions 
+%                        else C.guarantees=C1.assumptions/\ C1.assumptions endif))
+%    );
+var trace_int:a;
+var trace_int:b;
+var trace_int:out_int;
+var trace:r;
 var trace:inst;
+var Contract: c1p = (
 
-function var Contract: ALU(var Contract:C,var Contract:C1)=
-
-  (
-    assumptions:true,
-    guarantees:(forall(i in 1..10) (if (inst[i]=0) then  C.guarantees=C1.assumptions\/ C1.assumptions 
-                       else C.guarantees=C1.assumptions/\ C1.assumptions endif))
-   );
-   
+  assumptions:true,
+  guarantees: (p(G(r->X(X(out_int)) = add(a,b) ) ) ) \/ not(true)
+);  
+     
    
 %%%test
-var bool:a;
-var bool:b;
-inst = [0,1,0,0,1,0,0,0,0,1];
+
+%inst = [0,1,0,0,1,0,0,0,0,1];
 var Contract: cp1 = (
 
   assumptions:true,
