@@ -12,32 +12,27 @@ type trace_int = array[1..MAX_TIME] of var int;
 %     guarantees:(forall(i in 1..10) (if (inst[i]=0) then  C.guarantees=C1.assumptions\/ C1.assumptions 
 %                        else C.guarantees=C1.assumptions/\ C1.assumptions endif))
 %    );
-var bool:a;
-var bool:b;
-var bool:out_int;
-var bool:out;
+var trace:a;
+var trace:b;
+var trace:out_int;
+var trace:out;
 var trace:r;
 var trace:inst;
-
+int:n=2;
 var Contract: C1 = (
 
-  assumptions:true,
-  guarantees: (forall(z in 1..MAX_TIME) (out_int= a\/b))
+  assumptions:forall(z in 1..MAX_TIME)(r-> forall(k in 1..n where z+k<=MAX_TIME )(not(r[z+k]) /\ a[z+k]=a[z] /\b[z+k]=b[z])),
+  guarantees: (forall(z in 1..MAX_TIME  where z+n<=MAX_TIME ) ( out_int[z+n]=a[z]+b[z]))
 ); 
 
- var Contract: C2 = (
-
-  assumptions:true,
-  guarantees: (forall(m in 1..MAX_TIME) ( out_int=a/\b))
-); 
 
 var Contract: C = (
 
-  assumptions:true,
-  guarantees: (forall(n in 1..MAX_TIME) ( if inst[i]=0 then out=a\/b else out=a/\b endif))
+  assumptions:forall(z in 1..MAX_TIME)(r-> forall(k in 1..n where z+k<=MAX_TIME )(not(r[z+k]) /\ a[z+k]=a[z] /\b[z+k]=b[z] /\ inst[z+k]=inst[z])),
+  guarantees: (forall(z in 1..MAX_TIME where z+n<=MAX_TIME) ( (r/\not(inst)->out_int[z+n]=a[z]+b[z]) /\ (r/\inst->out_int[z+n]=a[z]*b[z]))  )
 );  
-var Contract:cp;   
-constraint cp=quotient(C,C1);   
+var Contract:C2;   
+constraint C2=quotient(C,C1);   
 
 
 solve satisfy;
