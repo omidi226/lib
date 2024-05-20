@@ -30,6 +30,6 @@ constraint p(U(t3,t4)) = false;
 constraint p(X(X(G(t5)))) = true;
 constraint p(X(G(X(t5)))) = true;
 
-output "All checks passed!";
+output ["All checks passed!"];
 
 solve satisfy;
