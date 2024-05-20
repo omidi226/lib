@@ -18,14 +18,7 @@ predicate p(var trace: t) =
     t[1]=1;
 
 %% LTL operators
-% add function
-function var trace:add(var trace_int:a,var trace_int:b)=
-                 let{
-                     var trace_int:addtrace;
-                     constraint addtrace=a+b;
-                 
-                 
-                 }in addtrace;
+
 
 % Globally/Always function
 function var trace: G(var trace: t) =
