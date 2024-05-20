@@ -2,7 +2,7 @@
 include "globals.mzn";
 include "ltl_lib.mzn";
 
-include "Contract.mzn";
+include "../Contract.mzn";
 
 
 type trace_int = array[1..MAX_TIME] of var int;
