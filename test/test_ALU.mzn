@@ -1,7 +1,7 @@
 % Use this editor as a MiniZinc scratch book
-include "../ltl_lib.mzn";
-include "../Contract.mzn";
-include "../ALU.mzn";
+include "ltl_lib.mzn";
+include "Contract.mzn";
+include "ALU.mzn";
 include "globals.mzn";
 
 % set the maximum time
