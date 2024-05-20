@@ -72,6 +72,24 @@ predicate enforce(var Contract: c) = (
 
 predicate assume(var Contract: c) = 
   c.assumptions;
+  
+% canonicalize (saturate) contract c
+function var Contract: canonicalize(var Contract: c) =
+(
+  assumptions: c.assumptions,
+  guarantees: c.guarantees \/ not c.assumptions
+);
+
+% Quotient of c and c1 (c1/c2) according to https://doi.org/10.1109/MEMCOD.2018.8556872
+function var Contract: quotient(var Contract: c, var Contract: c1) = 
+let {
+  Contract: c_can = (assumptions: c.assumptions,guarantees:c.guarantees\/not c.assumptions);
+  Contract: c1_can = (assumptions: c1.assumptions,guarantees:c1.guarantees\/not c1.assumptions)
+  } in
+  (
+    assumptions: c_can.assumptions /\ c1_can.guarantees,
+    guarantees: c1_can.assumptions /\ c.guarantees \/ not (c.assumptions /\ c1.guarantees)
+  );
 
 %FIXME
 %predicate is_Complete( var Contract:c)= 
@@ -132,7 +150,7 @@ constraint assume(c3);
 %constraint (i=1)/\(o_p=3); % satisfies assumption, but violates gurantee of cc
 constraint (i=2)/\(o_p=0);
 
-%solve satisfy ;
+
 
 %output ["Domain of i: \((i)), o: \((o)), o_p: \(o_p)\n"];
 
