@@ -1,7 +1,11 @@
 % Use this editor as a MiniZinc scratch book
 include "globals.mzn";
 include "ltl_lib.mzn";
+
 include "Contract.mzn";
+
+%include "lib/contract_lib.mzn";
+
 type trace_int = array[1..MAX_TIME] of var int;
 
 
@@ -26,13 +30,16 @@ var Contract: C1 = (
 ); 
 
 
-var Contract: C = (
+ 
+var Contract:C= (  
+   
 
   assumptions:forall(z in 1..MAX_TIME)(r[z]=1 -> forall(k in 1..n where z+k<=MAX_TIME )(r[z+k]=0 /\ a[z+k]=a[z] /\b[z+k]=b[z] /\ inst[z+k]=inst[z])),
   guarantees: (forall(z in 1..MAX_TIME where z+n<=MAX_TIME) ( (r[z]=1/\inst[z]=0 -> out[z+n]=a[z]+b[z]) /\ (r[z]=1/\inst[z]=1->out[z+n]=a[z]*b[z]))  )
 );  
 var Contract:C2;   
-   
+constraint C2=quotient(C,C1);   
+
 
 
 solve satisfy;
