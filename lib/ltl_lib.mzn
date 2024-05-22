@@ -12,7 +12,7 @@ int: MAX_TIME;
 
 % The trace type used by the LTL operators
 type trace = array[1..MAX_TIME] of var 0..1;
-type trace_int = array[1..MAX_TIME] of var int;
+
 % extend the normal propositional logic aserion for traces (only check the first instance)
 predicate p(var trace: t) = 
     t[1]=1;
