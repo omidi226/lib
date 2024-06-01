@@ -31,7 +31,7 @@ constraint forall(i in tasks) (
    AppContract[i].guarantees= (WCEC[i]=WCECtable[s,i,beta[i]])
   );  
 
-constraint forall( i,j,k in tasks) (conjunction3(AppContract[k],AppContract[i],AppContract[j]));
+%constraint forall( b,j,k in tasks) (conjunction3(AppContract[k],AppContract[b],AppContract[j]));
 
 %%%%%%%%%%%%%%% platform contract %%%%%%%%%%%%%%%%%
 
@@ -51,13 +51,9 @@ constraint  forall(i in tasks)(d[i]= WCEC[i ]  div ERate[beta[i],gamma[i]] );
 array[tasks]  of var 0..5 :start;
 array [1..m,1..2]of tasks: next;
 var Contract:Cm;
-constraint (true) in Cm.assumptions;
-constraint (true) in Cm.guarantees; % cost gurartee constraint 
+constraint  Cm.assumptions=true;
+constraint  Cm.guarantees=true; % cost gurartee constraint 
 
-predicate enforce(var Contract:c)=
-(
-  forall(a in c.assumptions)(a=1 )/\ forall(g in c.guarantees)(g=1 )
-);
  
 
 %constraint (cost[1]=1 /\ cost[2]=1 /\cost[3]=1 ) in Cm.guarantees;
