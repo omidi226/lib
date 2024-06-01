@@ -16,7 +16,8 @@ array [Archs] of var 0..:alpha;
 array [tasks] of  var Archs:beta;
 array [tasks] of var Res:gamma;
 array [1..n] of var int:WCEC;
-array [1..s,1..n,Archs] of int:WCECtable;
+array [1..n,Archs] of int:WCECtableS1;
+array [1..n,Archs] of int:WCECtableS2;
 array [Archs,Res] of var int:ERate;
 array [Archs,1..2] of int:ERatetable;
 array [Archs,Res] of var 1..2:mode; 
@@ -27,18 +28,18 @@ array[tasks] of var Contract:AppContract;
 
 constraint forall(i in tasks) (
  
-   AppContract[i].assumptions=true /\ % beta[1]=1 \/beta[1]=2  
-   AppContract[i].guarantees= (WCEC[i]=WCECtable[s,i,beta[i]])
+   AppContract[i].assumptions=(beta[1]=1 \/beta[1]=2) /\ % beta[1]=1 \/beta[1]=2  
+   AppContract[i].guarantees= (WCEC[i]=WCECtableS1[i,beta[i]] \/ WCEC[i]=WCECtableS2[i,beta[i]])
   );  
 
-%constraint forall( b,j,k in tasks) (conjunction3(AppContract[k],AppContract[b],AppContract[j]));
+%constraint forall( k,b,j in tasks) (conjunction3(AppContract[k],AppContract[b],AppContract[j]));
 
 %%%%%%%%%%%%%%% platform contract %%%%%%%%%%%%%%%%%
 
 array[Archs,Res] of var Contract:PlatContract;
 
 constraint forall (i in Archs,j in Res where j<=alpha[i]) (   
-  PlatContract[i,j].assumptions=true /\ 
+  PlatContract[i,j].assumptions=(mode[1,2]!=2) /\ 
   PlatContract[i,j].guarantees= ( ERate[i,j]=ERatetable[i,mode[i,j]]  )
   );%mode[1,?]!=2
 
