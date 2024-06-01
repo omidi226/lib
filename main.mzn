@@ -1,17 +1,12 @@
 % Use this editor as a MiniZinc scratch book
 include "globals.mzn";
-
-type Contract = var record ( var set of 0..1: assumptions, var set of 0..1: guarantees);
-
-predicate conjunction(var Contract: c3,var Contract: c1,var Contract: c2) =
-(c3.assumptions = c1.assumptions union c2.assumptions) /\( c3.guarantees = c1.guarantees intersect c2.guarantees);
+include "Contract.mzn";
 
 int:n;
 int:m;
 array [tasks] of var 0..: d;
 int:R;
 int:s;
-%bool:s2;
 int:Arch_size;
 
 set of int:tasks=1..n;
@@ -32,19 +27,19 @@ array[tasks] of var Contract:AppContract;
 
 constraint forall(i in tasks) (
  
-  (true) in AppContract[i].assumptions /\ % beta[1]=1 \/beta[1]=2  
-  (WCEC[i]=WCECtable[s,i,beta[i]] in AppContract[i].guarantees)
+   AppContract[i].assumptions=true /\ % beta[1]=1 \/beta[1]=2  
+   AppContract[i].guarantees= (WCEC[i]=WCECtable[s,i,beta[i]])
   );  
 
-constraint forall( i,j,k in tasks) (conjunction(AppContract[k],AppContract[i],AppContract[j]));
+constraint forall( i,j,k in tasks) (conjunction3(AppContract[k],AppContract[i],AppContract[j]));
 
 %%%%%%%%%%%%%%% platform contract %%%%%%%%%%%%%%%%%
 
 array[Archs,Res] of var Contract:PlatContract;
 
 constraint forall (i in Archs,j in Res where j<=alpha[i]) (   
-  (true  ) in PlatContract[i,j].assumptions /\ 
-  (ERate[i,j]=ERatetable[i,mode[i,j]] in PlatContract[i,j].guarantees)
+  PlatContract[i,j].assumptions=true /\ 
+  PlatContract[i,j].guarantees= ( ERate[i,j]=ERatetable[i,mode[i,j]]  )
   );%mode[1,?]!=2
 
                                                                                                                                                                                 
