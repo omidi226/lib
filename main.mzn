@@ -1,26 +1,27 @@
 % Use this editor as a MiniZinc scratch book
 include "globals.mzn";
-include "Contract.mzn";
+include "contract.mzn";
 
 int:n;
 int:m;
 array [tasks] of var 0..: d;
 int:R;
-int:s;
+int:max_app_scens;
 int:Arch_size;
 
 set of int:tasks=1..n;
 set of int:Res=1..R;
 set of int:Archs=1..Arch_size;
+set of int:app_scens=1..max_app_scens;
 array [Archs] of var 0..:alpha;
 array [tasks] of  var Archs:beta;
 array [tasks] of var Res:gamma;
 array [1..n] of var int:WCEC;
-array [1..n,Archs] of int:WCECtableS1;
-array [1..n,Archs] of int:WCECtableS2;
+array [1..2,1..n,Archs] of int:WCECtable;
 array [Archs,Res] of var int:ERate;
 array [Archs,1..2] of int:ERatetable;
 array [Archs,Res] of var 1..2:mode; 
+var app_scens: app_scen;
 
 %%%%%%%%%%%%%%% app Contract  %%%%%%%%%%%%%%%%%%%%%
 
@@ -28,8 +29,8 @@ array[tasks] of var Contract:AppContract;
 
 constraint forall(i in tasks) (
  
-   AppContract[i].assumptions=(beta[1]=1 \/beta[1]=2) /\ % beta[1]=1 \/beta[1]=2  
-   AppContract[i].guarantees= (WCEC[i]=WCECtableS1[i,beta[i]] \/ WCEC[i]=WCECtableS2[i,beta[i]])
+   AppContract[i].assumptions=(beta[1]=1 \/beta[1]=2) /\ % assuming task 1 cannot be bound to Arch 3
+   AppContract[i].guarantees= (WCEC[i]=WCECtable[app_scen,i,beta[i]])
   );  
 
 %constraint forall( k,b,j in tasks) (conjunction3(AppContract[k],AppContract[b],AppContract[j]));
