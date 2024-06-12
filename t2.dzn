@@ -7,7 +7,7 @@ m=2;
 max_app_scens=2;
 
 WCECtable=array3d(1..2,1..n,Archs,
-  [1,2,1,
+  [1,2,3,
    2,3,3,
    1,2,2
    ,
