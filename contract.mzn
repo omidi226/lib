@@ -129,7 +129,7 @@ var Contract: c1 = (
 %   input_vars:i,
 %   output_vars:o,
   assumptions:(i<=10),
-  guarantees: (o<=i /\ i<=2*o+10  )
+  guarantees: (o<=i  )
 );
 
 var Contract: c2 = (
@@ -138,11 +138,16 @@ var Contract: c2 = (
   assumptions:(o<=1 ),
   guarantees: (o>=o_p )
 );
+constraint c3=compose(c1,c2);
+constraint enforce(c1);
+constraint enforce(c2);
+%constraint enforce(c3);
+
+
 %constraint is_compatible(c1);
 %constraint is_consistent(c1);
 %constraint is_correct(c1);
 %constraint is_Complete(c2);
-constraint  c3=compose(c1,c2);
 %constraint c3.assumptions = c1.assumptions union c2.assumptions;
 %constraint c3.guarantees = c1.guarantees union c2.guarantees;
 %constraint compose (c3,c1,c2);
