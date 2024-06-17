@@ -42,11 +42,11 @@ constraint enforce(AppContracts);
 %%%%%%%%%%%%%%% platform contract %%%%%%%%%%%%%%%%%
 
 array[Archs,Res] of var Contract:PlatContract;
-
 constraint forall (i in Archs,j in Res where j<=alpha[i]) (   
   PlatContract[i,j].assumptions=(true) /\ 
   PlatContract[i,j].guarantees= ( ERate[i,j]=ERatetable[i,mode[i,j]]  )
   );%mode[1,?]!=2
+  
 constraint enforce(PlatContract[1,1]);
 constraint enforce(PlatContract[1,2]);
 constraint enforce(PlatContract[1,3]);
