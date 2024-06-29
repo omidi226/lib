@@ -139,9 +139,9 @@ var Contract: c2 = (
   guarantees: (o>=o_p )
 );
 constraint c3=compose(c1,c2);
-constraint enforce(c1);
-constraint enforce(c2);
-%constraint enforce(c3);
+%constraint enforce(c1);
+%constraint enforce(c2);
+constraint enforce(c3);
 
 
 %constraint is_compatible(c1);
