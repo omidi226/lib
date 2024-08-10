@@ -35,10 +35,10 @@ var Contract:sensing;
 constraint sensing=compose(occupancy,temperature);
 
 %%%%%%%%%%%%%%%%%%%%%%  control %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%var Contract:control=(
-%  assumptions:(abs( vs_occ-phy_occ)<=1 /\ abs(vs_temp1-phy_temp1)<=1 ),
-% guarantees: (( abs( vs_occ-phy_occ)<=1 /\ abs(vs_temp1-phy_temp1)<=1) -> vs_act>10)
-%);
+var Contract:control=(
+  assumptions:(abs( vs_occ-phy_occ)<1 /\ abs(vs_temp1-phy_temp1)<1 ),
+ guarantees: (( abs( vs_occ-phy_occ)<1 /\ abs(vs_temp1-phy_temp1)<1) -> vs_act>10)
+);
 %%%%%%%%%%%%%%%%%%%%%%  actuation %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 var Contract: fanControl= (
 
@@ -51,25 +51,23 @@ var Contract: fanControl= (
 
 var Contract:system=(
   assumptions:( 0<=vs_occ /\ vs_occ<=10 /\ -10<= vs_temp1 /\ vs_temp1 <=10 /\ -10<= phy_temp1 /\ phy_temp1 <=10 /\ 0<=phy_occ /\ phy_occ<=10 ),
-  guarantees: (abs( vs_occ-phy_occ)<=1 /\ abs(vs_temp1-phy_temp1)<=1 /\ (( abs( vs_occ-phy_occ)<=1 /\ abs(vs_temp1-phy_temp1)<=1) -> vs_act>10)/\ (vs_act>10 ->phy_act=10* p))
+  guarantees: (abs( vs_occ-phy_occ)<=1 /\ abs(vs_temp1-phy_temp1)<=1 /\ (( abs( vs_occ-phy_occ)<1 /\ abs(vs_temp1-phy_temp1)<1) -> vs_act>10)/\ (vs_act>10 ->phy_act=10* p))
 );
 
-var Contract:system2=( 
- assumptions:( 0<=vs_occ /\ vs_occ<=10 /\ -10<= vs_temp1 /\ vs_temp1 <=10 /\ -10<= phy_temp1 /\ phy_temp1 <=10 /\ 0<=phy_occ /\ phy_occ<=10 ),
- guarantees: (abs( vs_occ-phy_occ)<=1 /\ abs(vs_temp1-phy_temp1)<=1  /\ (vs_act>10 ->phy_act=10* p))
-);
-%constraint enforce(system);
-%constraint enforce(system2);
+
+constraint enforce(system);
 constraint enforce(fanControl);
-var Contract:control;
-%var Contract:system;
-%var Contract:system2;
-%constraint system=compose4(physicalEnvironment,sensing,fanControl,control);
-%constraint system2=compose3(physicalEnvironment,sensing,fanControl);
-constraint control=quotient(system,system2);
+
+var Contract:control2;
+var Contract:system2;
+var Contract:controls;
+
+constraint system2=compose3(physicalEnvironment,sensing,fanControl);
+constraint control2=quotient(system,system2);
+constraint controls=is_refine(control2,control);
 
 % example
-vs_temp1=3;
+vs_temp1=10;
 vs_occ=0;
 phy_temp1=10;
 phy_occ=0;
