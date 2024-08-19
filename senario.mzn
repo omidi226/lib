@@ -5,7 +5,16 @@ include "contract.mzn";
 
 
 var 1..3:s;
-var -10..10: I;
+predicate componenetContract(var Contract:Contract1,var Contract:Contract2,var Contract:Contract3,var Contract:ConjContract)=(
+ConjContract= conjunction3(Contract1,Contract2,Contract3)
+);
+
+
+
+
+
+
+/*var -10..10: I;
 var -10..10: O;
 var -10..10: m;
 var -10..10: p;
@@ -73,7 +82,7 @@ constraint Contract3=conjunction3(c3_1,c3_2,c3_3);%contract component3
 
 constraint contractcompose1=compose(Contarct1,Contract2);
 constraint contractcompose2=compose(contractcompose1,Contract3);
-
+*/
 solve satisfy;
 %output ["Domain of Contarct1: \((Contarct1)),I: \((I)), O: \((O)), m: \(m), p: \((p))\n"];
 
