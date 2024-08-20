@@ -15,15 +15,17 @@ int:Arch_size;
 
 
 %%%%%%%%%%%%%%% app Contract  %%%%%%%%%%%%%%%%%%%%%
-var Contract: AppContracts;
-var AppContract:appcontract;
+%var Contract: AppContracts;
+%var AppContract:appcontract;
 
-constraint forall( s in 1..n where n<=4)(
+predicate AppContracts(var AppContract:appcontract,var Contract:appcontracts)=(
 
-        AppContracts= compose4(appcontract[1],appcontract[2],appcontract[3],appcontract[4])
+           forall(d in 1)( 
+
+        appcontracts= compose4(appcontract[d],appcontract[d+1],appcontract[d+2],appcontract[d+3]))
         );
 
-constraint enforce(AppContracts);
+%constraint enforce(appcontracts);
 
 %%%%%%%%%%%%%%% platform contract %%%%%%%%%%%%%%%%%
 var PlatContract:platcontract;
