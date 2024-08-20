@@ -28,12 +28,14 @@ predicate AppContracts(var AppContract:appcontract,var Contract:appcontracts)=(
 %constraint enforce(appcontracts);
 
 %%%%%%%%%%%%%%% platform contract %%%%%%%%%%%%%%%%%
-var PlatContract:platcontract;
-array [1..Arch_size] of var 0..:alpha;
-constraint forall (i in 1..Arch_size,j in 1..R ) (
-                  j<=alpha[i]
-                  );
 
+%array [1..Arch_size] of var 0..:alpha;
+
+predicate PlatContracts(var PlatContract:platcontract,array [1..Arch_size] of var 0..:alpha)=(
+      forall (i in 1..Arch_size,j in 1..R ) (
+                  j<=alpha[i]
+                  )
+);
 
 
 %%%%%%%%%%%%%%%%%%%%%% mapper contract%%%%%%%%%%%%%%%%%%%%%%%%%%%%
