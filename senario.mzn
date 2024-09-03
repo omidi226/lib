@@ -5,14 +5,29 @@ include "contract.mzn";
 
 
 var 1..3:s;
-predicate componenetContract(var Contract:Contract1,var Contract:Contract2,var Contract:Contract3,var Contract:ConjContract)=(
-ConjContract= conjunction3(Contract1,Contract2,Contract3)
+function var Contract: componenetContract(var Contract:Contract1,var Contract:Contract2,var Contract:Contract3)=(
+ conjunction3(Contract1,Contract2,Contract3)
 );
-
-
-
-
-
+var Contract:componenetContract1;
+var Contract:componenetContract2;
+var Contract:componenetContract3;
+var Contract:c1_3;
+var Contract:c1_2;
+var Contract:c1_1;
+var Contract:c2_3;
+var Contract:c2_2;
+var Contract:c2_1;
+var Contract:c3_3;
+var Contract:c3_2;
+var Contract:c3_1;
+var Contract:conj1;
+var Contract:conj2;
+var Contract:conj3;
+constraint componenetContract1=componenetContract(c1_1,c1_2,c1_3);
+constraint componenetContract2=componenetContract(c2_1,c2_2,c2_3);
+constraint componenetContract3=componenetContract(c3_1,c3_2,c3_3);
+var Contract:systemcontract;
+constraint systemcontract=compose3(componenetContract1,componenetContract2,componenetContract3);
 
 /*var -10..10: I;
 var -10..10: O;
